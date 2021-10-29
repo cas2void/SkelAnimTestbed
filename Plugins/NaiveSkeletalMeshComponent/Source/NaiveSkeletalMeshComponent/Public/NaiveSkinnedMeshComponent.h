@@ -22,5 +22,13 @@ public:
 	// UPrimitiveComponent Intefaces
 	//
 public:
+	// Enable material slots in detail panel
+	virtual int32 GetNumMaterials() const override;
+
 	virtual FPrimitiveSceneProxy* CreateSceneProxy() override;
+
+public:
+	// Quad width
+	UPROPERTY(EditAnywhere)
+	float Width = 100.0f;
 };

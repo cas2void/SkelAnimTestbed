@@ -7,44 +7,39 @@ FNaiveSkeletalMeshSceneProxy::FNaiveSkeletalMeshSceneProxy(const UNaiveSkinnedMe
     : FPrimitiveSceneProxy(Component)
     , VertexFactory(GetScene().GetFeatureLevel(), "FNaiveSkeletalMeshSceneProxy")
 {
-    //StaticVertexBuffers.StaticMeshVertexBuffer.Init(3, 3);
-
-    TArray<FVector> Positions{ FVector(0.0f, 0.0f, 100.0f), FVector(100.0f, 0.0f, 100.0f), FVector(0.0f, 100.0f, 100.0f) };
+    // Generate verices of a quad
+    float MinValue = Component->Width * -0.5f;
+    float MaxValue = Component->Width * 0.5f;
+    TArray<FVector> Positions{ 
+        FVector(MaxValue, MinValue, 0.0f),
+        FVector(MinValue, MinValue, 0.0f),
+        FVector(MinValue, MaxValue, 0.0f),
+        FVector(MaxValue, MaxValue, 0.0f)
+    };
     StaticVertexBuffers.PositionVertexBuffer.Init(Positions);
 
-    TArray<FColor> Colors{ FColor::White, FColor::White, FColor::White };
-    StaticVertexBuffers.ColorVertexBuffer.InitFromColorArray(Colors);
-
     TArray<FStaticMeshBuildVertex> Vertices;
-    Vertices.AddDefaulted(3);
-    const FVector Edge01 = (Positions[1] - Positions[0]);
-    const FVector Edge02 = (Positions[2] - Positions[0]);
-
-    const FVector TangentX = Edge01.GetSafeNormal();
-    const FVector TangentZ = (Edge02 ^ Edge01).GetSafeNormal();
-    const FVector TangentY = (TangentX ^ TangentZ).GetSafeNormal();
-
-    Vertices[0].TangentX = TangentX;
-    Vertices[0].TangentY = TangentY;
-    Vertices[0].TangentZ = TangentZ;
-
-    Vertices[1].TangentX = TangentX;
-    Vertices[1].TangentY = TangentY;
-    Vertices[1].TangentZ = TangentZ;
-
-    Vertices[2].TangentX = TangentX;
-    Vertices[2].TangentY = TangentY;
-    Vertices[2].TangentZ = TangentZ;
-
+    Vertices.AddDefaulted(4);
+    Vertices[0].TangentZ = FVector::UpVector;
+    Vertices[1].TangentZ = FVector::UpVector;
+    Vertices[2].TangentZ = FVector::UpVector;
+    Vertices[3].TangentZ = FVector::UpVector;
     Vertices[0].UVs[0] = FVector2D(0.0f, 0.0f);
-    Vertices[1].UVs[0] = FVector2D(1.0f, 0.0f);
-    Vertices[2].UVs[0] = FVector2D(0.0f, 1.0f);
-
+    Vertices[1].UVs[0] = FVector2D(0.0f, 1.0f);
+    Vertices[2].UVs[0] = FVector2D(1.0f, 1.0f);
+    Vertices[3].UVs[0] = FVector2D(1.0f, 0.0f);
     StaticVertexBuffers.StaticMeshVertexBuffer.Init(Vertices, 1);
 
-    TArray<uint32> Indices{ 0, 1, 2 };
+    TArray<FColor> Colors{ FColor::Red, FColor::Green, FColor::White, FColor::Blue };
+    StaticVertexBuffers.ColorVertexBuffer.InitFromColorArray(Colors);
+
+    TArray<uint32> Indices{ 
+        0, 1, 2,
+        2, 3, 0
+    };
     IndexBuffer.AppendIndices(Indices.GetData(), Indices.Num());
 
+    // Initialize render resources and bind data
     ENQUEUE_RENDER_COMMAND(NaiveSkeletalMeshVertexFactoryInit)(
         [this](FRHICommandListImmediate& RHICmdList)
         {
@@ -54,9 +49,9 @@ FNaiveSkeletalMeshSceneProxy::FNaiveSkeletalMeshSceneProxy(const UNaiveSkinnedMe
             IndexBuffer.InitResource();
 
             FLocalVertexFactory::FDataType Data;
-            StaticVertexBuffers.PositionVertexBuffer.BindPositionVertexBuffer(&VertexFactory, Data);
             StaticVertexBuffers.StaticMeshVertexBuffer.BindTangentVertexBuffer(&VertexFactory, Data);
             StaticVertexBuffers.StaticMeshVertexBuffer.BindPackedTexCoordVertexBuffer(&VertexFactory, Data);
+            StaticVertexBuffers.PositionVertexBuffer.BindPositionVertexBuffer(&VertexFactory, Data);
             StaticVertexBuffers.ColorVertexBuffer.BindColorVertexBuffer(&VertexFactory, Data);
             VertexFactory.SetData(Data);
 
@@ -86,23 +81,23 @@ void FNaiveSkeletalMeshSceneProxy::GetDynamicMeshElements(const TArray<const FSc
         if (VisibilityMap & (1 << ViewIndex))
         {
             FMeshBatch& Mesh = Collector.AllocateMesh();
+
             Mesh.MaterialRenderProxy = Material->GetRenderProxy();
             Mesh.VertexFactory = &VertexFactory;
             Mesh.ReverseCulling = IsLocalToWorldDeterminantNegative();
             Mesh.Type = PT_TriangleList;
             Mesh.DepthPriorityGroup = SDPG_World;
             Mesh.bCanApplyViewModeOverrides = true;
-            //Mesh.bWireframe = 
 
             FMeshBatchElement& BatchElement = Mesh.Elements[0];
             BatchElement.IndexBuffer = &IndexBuffer;
 
+            // Set uniform buffer
             bool bHasPrecomputedVolumetricLightmap;
             FMatrix PreviousLocalToWorld;
             int32 SingleCaptureIndex;
             bool bOutputVelocity;
             GetScene().GetPrimitiveUniformShaderParameters_RenderThread(GetPrimitiveSceneInfo(), bHasPrecomputedVolumetricLightmap, PreviousLocalToWorld, SingleCaptureIndex, bOutputVelocity);
-
             FDynamicPrimitiveUniformBuffer& DynamicPrimitiveUniformBuffer = Collector.AllocateOneFrameResource<FDynamicPrimitiveUniformBuffer>();
             DynamicPrimitiveUniformBuffer.Set(GetLocalToWorld(), PreviousLocalToWorld, GetBounds(), GetLocalBounds(), true, bHasPrecomputedVolumetricLightmap, DrawsVelocity(), false);
             BatchElement.PrimitiveUniformBufferResource = &DynamicPrimitiveUniformBuffer.UniformBuffer;

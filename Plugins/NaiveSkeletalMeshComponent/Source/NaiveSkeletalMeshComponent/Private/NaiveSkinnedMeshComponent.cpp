@@ -3,24 +3,17 @@
 
 FBoxSphereBounds UNaiveSkinnedMeshComponent::CalcBounds(const FTransform& LocalToWorld) const
 {
-    TArray<FVector> Positions{ FVector(0.0f, 0.0f, 100.0f), FVector(100.0f, 0.0f, 100.0f), FVector(0.0f, 100.0f, 100.0f) };
+	float MinValue = Width * -0.5f;
+	float MaxValue = Width * 0.5f;
+	FBox BoundingBox(FVector(MinValue, MinValue, 0.0f), FVector(MaxValue, MaxValue, 0.0f));
+	BoundingBox = BoundingBox.TransformBy(LocalToWorld);
 
-	FBox BoundingBox(ForceInit);
+	return FBoxSphereBounds(BoundingBox);
+}
 
-	// Bounds are tighter if the box is generated from pre-transformed vertices.
-	for (int32 Index = 0; Index < Positions.Num(); ++Index)
-	{
-		BoundingBox += LocalToWorld.TransformPosition(Positions[Index]);
-		BoundingBox += LocalToWorld.TransformPosition(Positions[Index]);
-		BoundingBox += LocalToWorld.TransformPosition(Positions[Index]);
-	}
-
-	FBoxSphereBounds NewBounds;
-	NewBounds.BoxExtent = BoundingBox.GetExtent();
-	NewBounds.Origin = BoundingBox.GetCenter();
-	NewBounds.SphereRadius = NewBounds.BoxExtent.Size();
-
-	return NewBounds;
+int32 UNaiveSkinnedMeshComponent::GetNumMaterials() const
+{
+	return 1;
 }
 
 FPrimitiveSceneProxy* UNaiveSkinnedMeshComponent::CreateSceneProxy()
