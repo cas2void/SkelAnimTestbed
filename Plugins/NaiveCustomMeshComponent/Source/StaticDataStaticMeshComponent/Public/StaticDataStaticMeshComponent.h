@@ -2,13 +2,13 @@
 
 #include "CoreMinimal.h"
 #include "Components/MeshComponent.h"
-#include "NaiveSkinnedMeshComponent.generated.h"
+#include "StaticDataStaticMeshComponent.generated.h"
 
 /**
  * 
  */
 UCLASS(Blueprintable, meta=(BlueprintSpawnableComponent))
-class NAIVESKELETALMESHCOMPONENT_API UNaiveSkinnedMeshComponent : public UMeshComponent
+class STATICDATASTATICMESHCOMPONENT_API UStaticDataStaticMeshComponent : public UMeshComponent
 {
 	GENERATED_BODY()
 	

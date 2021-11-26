@@ -6,16 +6,16 @@
 #include "RawIndexBuffer.h"
 #include "LocalVertexFactory.h"
 
-#include "NaiveSkinnedMeshComponent.h"
+#include "StaticDataStaticMeshComponent.h"
 
 /**
  * 
  */
-class NAIVESKELETALMESHCOMPONENT_API FNaiveSkeletalMeshSceneProxy : public FPrimitiveSceneProxy
+class STATICDATASTATICMESHCOMPONENT_API FStaticDataStaticMeshSceneProxy : public FPrimitiveSceneProxy
 {
 public:
-	FNaiveSkeletalMeshSceneProxy(const UNaiveSkinnedMeshComponent* Component);
-	virtual ~FNaiveSkeletalMeshSceneProxy();
+	FStaticDataStaticMeshSceneProxy(const UStaticDataStaticMeshComponent* Component);
+	virtual ~FStaticDataStaticMeshSceneProxy();
 
 	//
 	// FPrimitiveSceneProxy Interfaces

@@ -3,9 +3,9 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogNaiveSkeletalMeshComponent, All, All)
+DECLARE_LOG_CATEGORY_EXTERN(LogStaticDataStaticMeshComponent, All, All)
 
-class FNaiveSkeletalMeshComponentModule : public IModuleInterface
+class FStaticDataStaticMeshComponentModule : public IModuleInterface
 {
 	//
 	// IModuleInterface Interfaces

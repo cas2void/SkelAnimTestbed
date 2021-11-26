@@ -1,11 +1,11 @@
-#include "NaiveSkeletalMeshSceneProxy.h"
+#include "StaticDataStaticMeshSceneProxy.h"
 
 #include "Materials/MaterialInterface.h"
 #include "Materials/Material.h"
 
-FNaiveSkeletalMeshSceneProxy::FNaiveSkeletalMeshSceneProxy(const UNaiveSkinnedMeshComponent* Component)
+FStaticDataStaticMeshSceneProxy::FStaticDataStaticMeshSceneProxy(const UStaticDataStaticMeshComponent* Component)
     : FPrimitiveSceneProxy(Component)
-    , VertexFactory(GetScene().GetFeatureLevel(), "FNaiveSkeletalMeshSceneProxy")
+    , VertexFactory(GetScene().GetFeatureLevel(), "FStaticDataStaticMeshSceneProxy")
 {
     // Generate verices of a quad
     float MinValue = Component->Width * -0.5f;
@@ -65,7 +65,7 @@ FNaiveSkeletalMeshSceneProxy::FNaiveSkeletalMeshSceneProxy(const UNaiveSkinnedMe
     }
 }
 
-FNaiveSkeletalMeshSceneProxy::~FNaiveSkeletalMeshSceneProxy()
+FStaticDataStaticMeshSceneProxy::~FStaticDataStaticMeshSceneProxy()
 {
     StaticVertexBuffers.StaticMeshVertexBuffer.ReleaseResource();
     StaticVertexBuffers.PositionVertexBuffer.ReleaseResource();
@@ -74,7 +74,7 @@ FNaiveSkeletalMeshSceneProxy::~FNaiveSkeletalMeshSceneProxy()
     VertexFactory.ReleaseResource();
 }
 
-void FNaiveSkeletalMeshSceneProxy::GetDynamicMeshElements(const TArray<const FSceneView*>& Views, const FSceneViewFamily& ViewFamily, uint32 VisibilityMap, FMeshElementCollector& Collector) const
+void FStaticDataStaticMeshSceneProxy::GetDynamicMeshElements(const TArray<const FSceneView*>& Views, const FSceneViewFamily& ViewFamily, uint32 VisibilityMap, FMeshElementCollector& Collector) const
 {
     for (int32 ViewIndex = 0; ViewIndex < Views.Num(); ViewIndex++)
     {
@@ -112,7 +112,7 @@ void FNaiveSkeletalMeshSceneProxy::GetDynamicMeshElements(const TArray<const FSc
     }
 }
 
-FPrimitiveViewRelevance FNaiveSkeletalMeshSceneProxy::GetViewRelevance(const FSceneView* View) const
+FPrimitiveViewRelevance FStaticDataStaticMeshSceneProxy::GetViewRelevance(const FSceneView* View) const
 {
     FPrimitiveViewRelevance Result;
     Result.bDynamicRelevance = true;
