@@ -1,8 +1,8 @@
 ﻿using UnrealBuildTool;
 
-public class NaiveSkeletalMeshComponent : ModuleRules
+public class StaticDataStaticMeshComponent : ModuleRules
 {
-	public NaiveSkeletalMeshComponent(ReadOnlyTargetRules Target) : base(Target)
+	public StaticDataStaticMeshComponent(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 

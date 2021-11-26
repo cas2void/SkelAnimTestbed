@@ -2,7 +2,7 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "Naive Skeletal Mesh Component",
+	"FriendlyName": "Naive Custom Mesh Component",
 	"Description": "",
 	"Category": "Other",
 	"CreatedBy": "cas2void",
@@ -16,7 +16,7 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "NaiveSkeletalMeshComponent",
+			"Name": "StaticDataStaticMeshComponent",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
