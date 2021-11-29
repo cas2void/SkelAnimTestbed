@@ -19,6 +19,11 @@
 			"Name": "StaticDataStaticMeshComponent",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "StaticDataDynamicMeshComponent",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	]
 }
