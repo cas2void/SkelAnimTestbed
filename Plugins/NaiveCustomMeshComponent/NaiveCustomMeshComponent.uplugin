@@ -24,6 +24,11 @@
 			"Name": "StaticDataDynamicMeshComponent",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "HandEditSkinnedMeshComponent",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	]
 }
